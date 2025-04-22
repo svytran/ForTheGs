@@ -41,7 +41,8 @@ struct WeeklyView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Upcoming this week")
-                .font(.headline)
+                .font(.title2)
+                .fontWeight(.bold)
                 .padding(.horizontal)
             
             VStack(spacing: 12) {
@@ -72,8 +73,10 @@ struct WeeklyView: View {
                                         }
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 4)
-                                        .background(activity.color.opacity(0.1))
-                                        .cornerRadius(8)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(activity.color.opacity(0.1))
+                                        )
                                     }
                                 }
                             }
@@ -84,35 +87,46 @@ struct WeeklyView: View {
             }
             .padding(.vertical, 8)
         }
-        .background(Color(.systemBackground))
     }
 }
 
 #Preview {
-    WeeklyView(
-        selectedDate: Date(),
-        activities: [
-            SelfCareActivity(
-                name: "Retinol",
-                icon: "moon.fill",
-                color: .purple,
-                pattern: .fixedDays([.monday, .wednesday, .friday]),
-                startDate: Date()
-            ),
-            SelfCareActivity(
-                name: "Leg day",
-                icon: "heart.fill",
-                color: .red,
-                pattern: .fixedDays([.monday, .wednesday, .friday]),
-                startDate: Date()
-            ),
-            SelfCareActivity(
-                name: "Running",
-                icon: "figure.run",
-                color: .blue,
-                pattern: .fixedDays([.monday, .wednesday]),
-                startDate: Date()
-            )
-        ]
-    )
+    ZStack {
+        LinearGradient(
+            gradient: Gradient(colors: [
+                Color.pink.opacity(0.1),
+                Color.white
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+        .ignoresSafeArea()
+        
+        WeeklyView(
+            selectedDate: Date(),
+            activities: [
+                SelfCareActivity(
+                    name: "Retinol",
+                    icon: "moon.fill",
+                    color: .purple,
+                    pattern: .fixedDays([.monday, .wednesday, .friday]),
+                    startDate: Date()
+                ),
+                SelfCareActivity(
+                    name: "Leg day",
+                    icon: "heart.fill",
+                    color: .red,
+                    pattern: .fixedDays([.monday, .wednesday, .friday]),
+                    startDate: Date()
+                ),
+                SelfCareActivity(
+                    name: "Running",
+                    icon: "figure.run",
+                    color: .blue,
+                    pattern: .fixedDays([.monday, .wednesday]),
+                    startDate: Date()
+                )
+            ]
+        )
+    }
 } 

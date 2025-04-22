@@ -5,61 +5,75 @@ struct CalendarView: View {
     let activities: [SelfCareActivity]
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // Calendar Header
-                HStack {
-                    Text(monthYearString)
-                        .font(.title)
-                        .fontWeight(.bold)
-                    Spacer()
-                    HStack(spacing: 20) {
-                        Button(action: previousMonth) {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(.blue)
-                                .imageScale(.large)
-                        }
-                        Button(action: nextMonth) {
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.blue)
-                                .imageScale(.large)
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Weekday headers
-                HStack {
-                    ForEach(weekdaySymbols, id: \.self) { symbol in
-                        Text(symbol)
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Calendar grid
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 7), spacing: 12) {
-                    ForEach(daysInMonth, id: \.self) { date in
-                        if let date = date {
-                            DayCell(
-                                date: date,
-                                isSelected: Calendar.current.isDate(date, inSameDayAs: selectedDate),
-                                activities: activitiesForDate(date),
-                                onTap: { self.selectedDate = date }
-                            )
-                        } else {
-                            Color.clear
-                                .aspectRatio(1, contentMode: .fill)
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.pink.opacity(0.1),
+                    Color.white
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Calendar Header
+                    HStack {
+                        Text(monthYearString)
+                            .font(.title)
+                            .fontWeight(.bold)
+                        Spacer()
+                        HStack(spacing: 20) {
+                            Button(action: previousMonth) {
+                                Image(systemName: "chevron.left")
+                                    .foregroundColor(.blue)
+                                    .imageScale(.large)
+                            }
+                            Button(action: nextMonth) {
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.blue)
+                                    .imageScale(.large)
+                            }
                         }
                     }
+                    .padding(.horizontal)
+                    
+                    // Weekday headers
+                    HStack {
+                        ForEach(weekdaySymbols, id: \.self) { symbol in
+                            Text(symbol)
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Calendar grid
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 7), spacing: 12) {
+                        ForEach(daysInMonth, id: \.self) { date in
+                            if let date = date {
+                                DayCell(
+                                    date: date,
+                                    isSelected: Calendar.current.isDate(date, inSameDayAs: selectedDate),
+                                    activities: activitiesForDate(date),
+                                    onTap: { self.selectedDate = date }
+                                )
+                            } else {
+                                Color.clear
+                                    .aspectRatio(1, contentMode: .fill)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Weekly view
+                    WeeklyView(selectedDate: selectedDate, activities: activities)
+                        .padding(.bottom, 20)
                 }
-                .padding(.horizontal)
-                
-                // Weekly view
-                WeeklyView(selectedDate: selectedDate, activities: activities)
             }
         }
+        .toolbarBackground(Color.pink.opacity(0.2), for: .navigationBar)
     }
     
     private var monthYearString: String {

@@ -12,7 +12,6 @@ struct MainTabView: View {
         case tasks
         case settings
     }
-    
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
@@ -29,6 +28,7 @@ struct MainTabView: View {
                     activities: viewModel.activities
                 )
                 .navigationTitle("Self Care Tracker")
+                .toolbarBackground(Color.pink.opacity(0.2), for: .navigationBar)
             }
             .tabItem {
                 Label("Calendar", systemImage: "calendar")
@@ -42,10 +42,10 @@ struct MainTabView: View {
                 .tag(Tab.add)
             
             NavigationStack {
-                TasksView(viewModel: viewModel)
+                DescriptionsView(viewModel: viewModel)
             }
             .tabItem {
-                Label("Tasks", systemImage: "checklist")
+                Label("Trackers", systemImage: "note.text")
             }
             .tag(Tab.tasks)
             
@@ -53,7 +53,7 @@ struct MainTabView: View {
                 SettingsView()
             }
             .tabItem {
-                Label("Settings", systemImage: "gear")
+                Label("Settings", systemImage: "gearshape.fill")
             }
             .tag(Tab.settings)
         }
@@ -69,15 +69,15 @@ struct MainTabView: View {
                         .frame(width: 70, height: 70)
                     
                     Circle()
-                        .fill(Color.green.opacity(0.2))
+                        .fill(Color.pink.opacity(0.1))
                         .frame(width: 60, height: 60)
                     
                     Image(systemName: "plus")
                         .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.green)
+                        .foregroundColor(.pink)
                 }
             }
-            .offset(y: -40)
+            .offset(y: -5)
         }
         .sheet(isPresented: $showingAddActivity) {
             AddActivityView(

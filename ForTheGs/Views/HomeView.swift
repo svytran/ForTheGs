@@ -27,72 +27,81 @@ struct HomeView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 24) {
-                // Today's date header
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Today.")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    Text(dateFormatter.string(from: Date()))
-                        .foregroundColor(.gray)
+        VStack(alignment: .leading, spacing: 24) {
+            // Today's date header
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Today.")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                Text(dateFormatter.string(from: Date()))
+                    .foregroundColor(.gray)
+            }
+            .padding(.horizontal)
+            
+            // Week view
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(-1...5, id: \.self) { dayOffset in
+                        if let date = Calendar.current.date(byAdding: .day, value: dayOffset, to: Date()) {
+                            DayButton(date: date, isToday: dayOffset == 0)
+                        }
+                    }
                 }
                 .padding(.horizontal)
-                
-                // Week view
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(-1...5, id: \.self) { dayOffset in
-                            if let date = Calendar.current.date(byAdding: .day, value: dayOffset, to: Date()) {
-                                DayButton(date: date, isToday: dayOffset == 0)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                
-                // To Do Section
-                if !todoActivities.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("To Do")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal)
-                        
-                        ForEach(todoActivities) { activity in
-                            ActivityRow(
-                                activity: activity,
-                                isCompleted: false
-                            ) {
-                                completedActivities.insert(activity.id)
-                            }
-                        }
-                    }
-                }
-                
-                // Done Section
-                if !doneActivities.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Done")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal)
-                        
-                        ForEach(doneActivities) { activity in
-                            ActivityRow(
-                                activity: activity,
-                                isCompleted: true
-                            ) {
-                                completedActivities.remove(activity.id)
-                            }
-                        }
-                    }
-                }
-                
-                Spacer()
             }
-            .padding(.top)
+            
+            // To Do Section
+            if !todoActivities.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("To Do")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal)
+                    
+                    ForEach(todoActivities) { activity in
+                        ActivityRow(
+                            activity: activity,
+                            isCompleted: false
+                        ) {
+                            completedActivities.insert(activity.id)
+                        }
+                    }
+                }
+            }
+            
+            // Done Section
+            if !doneActivities.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Done")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal)
+                    
+                    ForEach(doneActivities) { activity in
+                        ActivityRow(
+                            activity: activity,
+                            isCompleted: true
+                        ) {
+                            completedActivities.remove(activity.id)
+                        }
+                    }
+                }
+            }
+            
+            Spacer()
         }
+        .padding(.top)
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.pink.opacity(0.1),
+                    Color.white
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
+        )
     }
 }
 
@@ -122,7 +131,7 @@ private struct DayButton: View {
                 .fontWeight(.medium)
         }
         .frame(width: 50, height: 50)
-        .background(isToday ? Color.blue.opacity(0.2) : Color.yellow.opacity(0.2))
+        .background(isToday ? Color.pink.opacity(0.3) : Color.pink.opacity(0.6))
         .cornerRadius(12)
     }
 }

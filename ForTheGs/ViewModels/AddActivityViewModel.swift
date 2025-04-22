@@ -7,6 +7,7 @@ class AddActivityViewModel: ObservableObject {
     @Published var selectedDays: Set<RecurringPattern.Weekday> = []
     @Published var intervalDays = 1
     @Published var patternType = PatternType.fixedDays
+    @Published var description = ""
     
     private let selfCareViewModel: SelfCareViewModel
     let initialStartDate: Date
@@ -53,7 +54,8 @@ class AddActivityViewModel: ObservableObject {
             icon: selectedIcon,
             color: selectedColor,
             pattern: pattern,
-            startDate: initialStartDate
+            startDate: initialStartDate,
+            description: description.isEmpty ? nil : description
         )
         
         selfCareViewModel.addActivity(activity)

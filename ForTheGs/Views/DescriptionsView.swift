@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TasksView: View {
+struct DescriptionsView: View {
     @ObservedObject var viewModel: SelfCareViewModel
     @State private var completedActivities: Set<UUID> = []
     
@@ -28,14 +28,27 @@ struct TasksView: View {
                     }
                 }
                 .padding(.vertical, 4)
+                .listRowBackground(Color.clear)
             }
         }
-        .navigationTitle("Tracker Descriptions")
+        .navigationTitle("Your Trackers")
+        .scrollContentBackground(.hidden)
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.pink.opacity(0.2),
+                    Color.white
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
+        )
     }
 }
 
 #Preview {
     NavigationStack {
-        TasksView(viewModel: SelfCareViewModel())
+        DescriptionsView(viewModel: SelfCareViewModel())
     }
 } 

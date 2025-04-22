@@ -7,13 +7,22 @@ struct SelfCareActivity: Identifiable {
     let color: Color
     let pattern: RecurringPattern
     let startDate: Date
+    let description: String?
     
-    init(name: String, icon: String, color: Color, pattern: RecurringPattern, startDate: Date) {
+    init(
+        name: String,
+        icon: String,
+        color: Color,
+        pattern: RecurringPattern,
+        startDate: Date,
+        description: String? = nil
+    ) {
         self.name = name
         self.icon = icon
         self.color = color
         self.pattern = pattern
         self.startDate = startDate
+        self.description = description
     }
 }
 
