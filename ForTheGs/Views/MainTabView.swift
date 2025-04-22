@@ -25,7 +25,7 @@ struct MainTabView: View {
             NavigationStack {
                 CalendarView(
                     selectedDate: $viewModel.selectedDate,
-                    activities: viewModel.activities
+                    viewModel: viewModel
                 )
                 .navigationTitle("Self Care Tracker")
                 .toolbarBackground(Color.pink.opacity(0.2), for: .navigationBar)

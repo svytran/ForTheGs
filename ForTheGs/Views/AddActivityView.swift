@@ -4,8 +4,12 @@ struct AddActivityView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: AddActivityViewModel
     
-    init(selfCareViewModel: SelfCareViewModel, initialStartDate: Date) {
-        _viewModel = StateObject(wrappedValue: AddActivityViewModel(selfCareViewModel: selfCareViewModel, initialStartDate: initialStartDate))
+    init(selfCareViewModel: SelfCareViewModel, initialStartDate: Date, editingActivity: SelfCareActivity? = nil) {
+        _viewModel = StateObject(wrappedValue: AddActivityViewModel(
+            selfCareViewModel: selfCareViewModel,
+            initialStartDate: initialStartDate,
+            editingActivity: editingActivity
+        ))
         
         // Customize toggle appearance
         UISwitch.appearance().onTintColor = UIColor(Color.pink.opacity(0.6))
@@ -167,12 +171,12 @@ struct AddActivityView: View {
                         .padding(.bottom, 100) // Extra padding for the Create Tracker button
                     }
                     
-                    // Create Tracker Button
+                    // Create/Update Tracker Button
                     Button(action: {
                         viewModel.save()
                         dismiss()
                     }) {
-                        Text("Create Tracker")
+                        Text(viewModel.editingActivity != nil ? "Update Tracker" : "Create Tracker")
                             .font(.headline)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -186,7 +190,7 @@ struct AddActivityView: View {
                     .disabled(!viewModel.isValid)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(viewModel.editingActivity != nil ? "Edit Tracker" : "New Tracker")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { dismiss() }) {
@@ -197,7 +201,7 @@ struct AddActivityView: View {
                 ToolbarItem(placement: .principal) {
                     HStack {
                         Image(systemName: viewModel.selectedIcon)
-                        Text(viewModel.name.isEmpty ? "New Tracker" : viewModel.name)
+                        Text(viewModel.name.isEmpty ? (viewModel.editingActivity != nil ? "Edit Tracker" : "New Tracker") : viewModel.name)
                     }
                     .font(.headline)
                 }

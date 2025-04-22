@@ -28,4 +28,14 @@ class SelfCareViewModel: ObservableObject {
             }
         }
     }
+    
+    func updateActivity(_ updatedActivity: SelfCareActivity) {
+        if let index = activities.firstIndex(where: { $0.id == updatedActivity.id }) {
+            activities[index] = updatedActivity
+        }
+    }
+    
+    func deleteActivity(_ activity: SelfCareActivity) {
+        activities.removeAll { $0.id == activity.id }
+    }
 } 

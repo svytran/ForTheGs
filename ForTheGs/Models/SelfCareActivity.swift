@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct SelfCareActivity: Identifiable {
-    let id = UUID()
+struct SelfCareActivity: Identifiable, Equatable {
+    let id: UUID
     let name: String
     let icon: String
     let color: Color
@@ -10,6 +10,7 @@ struct SelfCareActivity: Identifiable {
     let description: String?
     
     init(
+        id: UUID = UUID(),
         name: String,
         icon: String,
         color: Color,
@@ -17,12 +18,17 @@ struct SelfCareActivity: Identifiable {
         startDate: Date,
         description: String? = nil
     ) {
+        self.id = id
         self.name = name
         self.icon = icon
         self.color = color
         self.pattern = pattern
         self.startDate = startDate
         self.description = description
+    }
+    
+    static func == (lhs: SelfCareActivity, rhs: SelfCareActivity) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

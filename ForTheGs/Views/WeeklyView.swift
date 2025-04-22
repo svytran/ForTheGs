@@ -2,7 +2,7 @@ import SwiftUI
 
 struct WeeklyView: View {
     let selectedDate: Date
-    let activities: [SelfCareActivity]
+    @ObservedObject var viewModel: SelfCareViewModel
     
     private var datesForSelectedWeek: [Date] {
         let calendar = Calendar.current
@@ -22,7 +22,7 @@ struct WeeklyView: View {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
         
-        return activities.filter { activity in
+        return viewModel.activities.filter { activity in
             let activityStartDate = calendar.startOfDay(for: activity.startDate)
             guard startOfDay >= activityStartDate else { return false }
             
@@ -91,7 +91,30 @@ struct WeeklyView: View {
 }
 
 #Preview {
-    ZStack {
+    let viewModel = SelfCareViewModel()
+    viewModel.addActivity(SelfCareActivity(
+        name: "Retinol",
+        icon: "moon.fill",
+        color: .purple,
+        pattern: .fixedDays([.monday, .wednesday, .friday]),
+        startDate: Date()
+    ))
+    viewModel.addActivity(SelfCareActivity(
+        name: "Leg day",
+        icon: "heart.fill",
+        color: .red,
+        pattern: .fixedDays([.monday, .wednesday, .friday]),
+        startDate: Date()
+    ))
+    viewModel.addActivity(SelfCareActivity(
+        name: "Running",
+        icon: "figure.run",
+        color: .blue,
+        pattern: .fixedDays([.monday, .wednesday]),
+        startDate: Date()
+    ))
+    
+    return ZStack {
         LinearGradient(
             gradient: Gradient(colors: [
                 Color.pink.opacity(0.1),
@@ -104,29 +127,7 @@ struct WeeklyView: View {
         
         WeeklyView(
             selectedDate: Date(),
-            activities: [
-                SelfCareActivity(
-                    name: "Retinol",
-                    icon: "moon.fill",
-                    color: .purple,
-                    pattern: .fixedDays([.monday, .wednesday, .friday]),
-                    startDate: Date()
-                ),
-                SelfCareActivity(
-                    name: "Leg day",
-                    icon: "heart.fill",
-                    color: .red,
-                    pattern: .fixedDays([.monday, .wednesday, .friday]),
-                    startDate: Date()
-                ),
-                SelfCareActivity(
-                    name: "Running",
-                    icon: "figure.run",
-                    color: .blue,
-                    pattern: .fixedDays([.monday, .wednesday]),
-                    startDate: Date()
-                )
-            ]
+            viewModel: viewModel
         )
     }
 } 

@@ -11,15 +11,34 @@ class AddActivityViewModel: ObservableObject {
     
     private let selfCareViewModel: SelfCareViewModel
     let initialStartDate: Date
+    let editingActivity: SelfCareActivity?
     
     enum PatternType {
         case fixedDays
         case interval
     }
     
-    init(selfCareViewModel: SelfCareViewModel, initialStartDate: Date) {
+    init(selfCareViewModel: SelfCareViewModel, initialStartDate: Date, editingActivity: SelfCareActivity? = nil) {
         self.selfCareViewModel = selfCareViewModel
         self.initialStartDate = initialStartDate
+        self.editingActivity = editingActivity
+        
+        if let activity = editingActivity {
+            // Pre-fill the form with activity data
+            self.name = activity.name
+            self.selectedIcon = activity.icon
+            self.selectedColor = activity.color
+            self.description = activity.description ?? ""
+            
+            switch activity.pattern {
+            case .fixedDays(let days):
+                self.patternType = .fixedDays
+                self.selectedDays = Set(days)
+            case .interval(let interval):
+                self.patternType = .interval
+                self.intervalDays = interval
+            }
+        }
     }
     
     var isValid: Bool {
@@ -50,14 +69,19 @@ class AddActivityViewModel: ObservableObject {
         }
         
         let activity = SelfCareActivity(
+            id: editingActivity?.id ?? UUID(),
             name: name,
             icon: selectedIcon,
             color: selectedColor,
             pattern: pattern,
-            startDate: initialStartDate,
+            startDate: editingActivity?.startDate ?? initialStartDate,
             description: description.isEmpty ? nil : description
         )
         
-        selfCareViewModel.addActivity(activity)
+        if editingActivity != nil {
+            selfCareViewModel.updateActivity(activity)
+        } else {
+            selfCareViewModel.addActivity(activity)
+        }
     }
 } 

@@ -27,17 +27,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            // Today's date header
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Today.")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text(dateFormatter.string(from: Date()))
-                    .foregroundColor(.gray)
-            }
-            .padding(.horizontal)
-            
+        VStack(alignment: .leading) {
             // Week view
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
@@ -47,8 +37,19 @@ struct HomeView: View {
                         }
                     }
                 }
-                .padding(.horizontal)
             }
+            .padding(.horizontal)
+            .padding(.top)
+            // Today's date header
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Today.")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                Text(dateFormatter.string(from: Date()))
+                    .foregroundColor(.gray)
+            }
+            .padding(.horizontal)
+            .padding(.bottom)
             
             // To Do Section
             if !todoActivities.isEmpty {

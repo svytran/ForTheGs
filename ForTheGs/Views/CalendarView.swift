@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @Binding var selectedDate: Date
-    let activities: [SelfCareActivity]
+    @ObservedObject var viewModel: SelfCareViewModel
     
     var body: some View {
         ZStack {
@@ -27,12 +27,12 @@ struct CalendarView: View {
                         HStack(spacing: 20) {
                             Button(action: previousMonth) {
                                 Image(systemName: "chevron.left")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.pink.opacity(0.9))
                                     .imageScale(.large)
                             }
                             Button(action: nextMonth) {
                                 Image(systemName: "chevron.right")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.pink.opacity(0.9))
                                     .imageScale(.large)
                             }
                         }
@@ -68,8 +68,11 @@ struct CalendarView: View {
                     .padding(.horizontal)
                     
                     // Weekly view
-                    WeeklyView(selectedDate: selectedDate, activities: activities)
-                        .padding(.bottom, 20)
+                    WeeklyView(
+                        selectedDate: selectedDate,
+                        viewModel: viewModel
+                    )
+                    .padding(.bottom, 20)
                 }
             }
         }
@@ -125,7 +128,7 @@ struct CalendarView: View {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
         
-        return activities.filter { activity in
+        return viewModel.activities.filter { activity in
             let activityStartDate = calendar.startOfDay(for: activity.startDate)
             guard startOfDay >= activityStartDate else { return false }
             
@@ -197,16 +200,16 @@ struct DayCell: View {
 }
 
 #Preview {
-    CalendarView(
+    let viewModel = SelfCareViewModel()
+    viewModel.addActivity(SelfCareActivity(
+        name: "Retinol",
+        icon: "moon.fill",
+        color: .purple,
+        pattern: .interval(3),
+        startDate: Date()
+    ))
+    return CalendarView(
         selectedDate: .constant(Date()),
-        activities: [
-            SelfCareActivity(
-                name: "Retinol",
-                icon: "moon.fill",
-                color: .purple,
-                pattern: .interval(3),
-                startDate: Date()
-            )
-        ]
+        viewModel: viewModel
     )
 } 
