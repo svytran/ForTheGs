@@ -1,5 +1,6 @@
-// import SwiftUI
-// import SwiftData
+import Foundation
+import SwiftData
+import SwiftUI
 
 // // MARK: - Repository Protocol
 // protocol SelfCareActivityRepositoryProtocol {
@@ -52,3 +53,59 @@
 //         }
 //     }
 // }
+
+protocol SelfCareActivityRepositoryProtocol {
+    func fetchActivities() -> [SelfCareActivity]
+    func addActivity(_ activity: SelfCareActivity)
+    func updateActivity(_ activity: SelfCareActivity)
+    func deleteActivity(_ activity: SelfCareActivity)
+}
+
+class SelfCareActivityRepository: SelfCareActivityRepositoryProtocol {
+    private let modelContext: ModelContext
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        print("📚 SelfCareActivityRepository initialized")
+    }
+    
+    func fetchActivities() -> [SelfCareActivity] {
+        print("🔍 Fetching all activities...")
+        let descriptor = FetchDescriptor<SelfCareActivity>(sortBy: [SortDescriptor(\.startDate)])
+        let activities = (try? modelContext.fetch(descriptor)) ?? []
+        print("📊 Found \(activities.count) activities")
+        return activities
+    }
+    
+    func addActivity(_ activity: SelfCareActivity) {
+        print("➕ Adding activity to database: \(activity.name)")
+        modelContext.insert(activity)
+        do {
+            try modelContext.save()
+            print("✅ Activity saved successfully")
+        } catch {
+            print("❌ Failed to save activity: \(error)")
+        }
+    }
+    
+    func updateActivity(_ activity: SelfCareActivity) {
+        print("🔄 Updating activity in database: \(activity.name)")
+        do {
+            try modelContext.save()
+            print("✅ Activity updated successfully")
+        } catch {
+            print("❌ Failed to update activity: \(error)")
+        }
+    }
+    
+    func deleteActivity(_ activity: SelfCareActivity) {
+        print("🗑️ Deleting activity from database: \(activity.name)")
+        modelContext.delete(activity)
+        do {
+            try modelContext.save()
+            print("✅ Activity deleted successfully")
+        } catch {
+            print("❌ Failed to delete activity: \(error)")
+        }
+    }
+}

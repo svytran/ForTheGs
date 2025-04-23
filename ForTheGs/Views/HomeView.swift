@@ -162,24 +162,3 @@ private struct ActivityRow: View {
         .padding(.horizontal)
     }
 }
-
-#Preview("Home") {
-    let viewModel = SelfCareViewModel()
-    viewModel.addActivity(SelfCareActivity(
-        name: "Drink Water",
-        icon: "drop.fill",
-        color: .blue,
-        pattern: .fixedDays([.monday, .wednesday, .friday]),
-        startDate: Date()
-    ))
-    viewModel.addActivity(SelfCareActivity(
-        name: "Meditate",
-        icon: "heart.fill",
-        color: .purple,
-        pattern: .fixedDays([RecurringPattern.Weekday.monday, .wednesday, .friday]),
-        startDate: Date()
-    ))
-    return NavigationStack {
-        HomeView(viewModel: viewModel)
-    }
-} 

@@ -7,7 +7,7 @@ class AddActivityViewModel: ObservableObject {
     @Published var selectedDays: Set<RecurringPattern.Weekday> = []
     @Published var intervalDays = 1
     @Published var patternType = PatternType.fixedDays
-    @Published var description = ""
+    @Published var activityDescription = ""
     
     private let selfCareViewModel: SelfCareViewModel
     let initialStartDate: Date
@@ -28,7 +28,7 @@ class AddActivityViewModel: ObservableObject {
             self.name = activity.name
             self.selectedIcon = activity.icon
             self.selectedColor = activity.color
-            self.description = activity.description ?? ""
+            self.activityDescription = activity.activityDescription ?? ""
             
             switch activity.pattern {
             case .fixedDays(let days):
@@ -60,12 +60,16 @@ class AddActivityViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func save() {
+        print("📝 Creating new activity...")
         let pattern: RecurringPattern
         if patternType == .fixedDays {
             pattern = .fixedDays(Array(selectedDays))
+            print("📅 Pattern type: Fixed Days - \(selectedDays.map { $0.rawValue })")
         } else {
             pattern = .interval(intervalDays)
+            print("🔄 Pattern type: Interval - Every \(intervalDays) days")
         }
         
         let activity = SelfCareActivity(
@@ -75,13 +79,17 @@ class AddActivityViewModel: ObservableObject {
             color: selectedColor,
             pattern: pattern,
             startDate: editingActivity?.startDate ?? initialStartDate,
-            description: description.isEmpty ? nil : description
+            activityDescription: activityDescription.isEmpty ? nil : activityDescription
         )
+        print("✅ Activity created: \(activity.name) with pattern: \(pattern)")
         
         if editingActivity != nil {
+            print("🔄 Updating existing activity...")
             selfCareViewModel.updateActivity(activity)
         } else {
+            print("➕ Adding new activity...")
             selfCareViewModel.addActivity(activity)
         }
+        print("✅ Activity saved successfully")
     }
 } 

@@ -1,7 +1,23 @@
 import SwiftUI
+import SwiftData
+
+struct MainTabViewContainer: View {
+    var body: some View {
+        let config = ModelConfiguration(isStoredInMemoryOnly: false)
+        let container = try! ModelContainer(for: SelfCareActivity.self, configurations: config)
+        let repository = SelfCareActivityRepository(modelContext: container.mainContext)
+        let viewModel = SelfCareViewModel(repository: repository)
+
+        MainTabView(viewModel: viewModel)
+    }
+}
 
 struct MainTabView: View {
-    @StateObject private var viewModel = SelfCareViewModel()
+    @StateObject private var viewModel: SelfCareViewModel
+    
+    init(viewModel: SelfCareViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     @State private var selectedTab = Tab.home
     @State private var showingAddActivity = false
     
@@ -102,5 +118,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    MainTabView()
-} 
+    MainTabViewContainer()
+}

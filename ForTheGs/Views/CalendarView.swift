@@ -198,18 +198,3 @@ struct DayCell: View {
         .buttonStyle(.plain)
     }
 }
-
-#Preview {
-    let viewModel = SelfCareViewModel()
-    viewModel.addActivity(SelfCareActivity(
-        name: "Retinol",
-        icon: "moon.fill",
-        color: .purple,
-        pattern: .interval(3),
-        startDate: Date()
-    ))
-    return CalendarView(
-        selectedDate: .constant(Date()),
-        viewModel: viewModel
-    )
-} 

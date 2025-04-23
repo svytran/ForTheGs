@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 enum Tab {
     case home
@@ -7,13 +8,21 @@ enum Tab {
     case settings
 }
 
+@MainActor
 class SelfCareViewModel: ObservableObject {
+    private let repository: SelfCareActivityRepositoryProtocol
     @Published var activities: [SelfCareActivity] = []
     @Published var selectedDate: Date = Date()
     @Published var selectedTab: Tab = .calendar
     
+    init(repository: SelfCareActivityRepositoryProtocol) {
+        self.repository = repository
+        self.activities = repository.fetchActivities()
+    }
+    
     func addActivity(_ activity: SelfCareActivity) {
-        activities.append(activity)
+        repository.addActivity(activity)
+        activities = repository.fetchActivities()
     }
     
     func getActivities(for date: Date) -> [SelfCareActivity] {
@@ -30,12 +39,12 @@ class SelfCareViewModel: ObservableObject {
     }
     
     func updateActivity(_ updatedActivity: SelfCareActivity) {
-        if let index = activities.firstIndex(where: { $0.id == updatedActivity.id }) {
-            activities[index] = updatedActivity
-        }
+        repository.updateActivity(updatedActivity)
+        activities = repository.fetchActivities()
     }
     
     func deleteActivity(_ activity: SelfCareActivity) {
-        activities.removeAll { $0.id == activity.id }
+        repository.deleteActivity(activity)
+        activities = repository.fetchActivities()
     }
 } 

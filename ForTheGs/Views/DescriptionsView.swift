@@ -178,7 +178,7 @@ struct AccordionItem: View {
                     }
                     
                     // Description Section
-                    if let description = activity.description {
+                    if let description = activity.activityDescription {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Description")
                                 .font(.subheadline)
@@ -202,20 +202,3 @@ struct AccordionItem: View {
         .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
     }
 }
-
-#Preview {
-    NavigationStack {
-        DescriptionsView(viewModel: {
-            let viewModel = SelfCareViewModel()
-            viewModel.addActivity(SelfCareActivity(
-                name: "Leg Day",
-                icon: "figure.walk",
-                color: .red,
-                pattern: .fixedDays([.monday, .wednesday, .friday]),
-                startDate: Date(),
-                description: "30 minutes of leg exercises"
-            ))
-            return viewModel
-        }())
-    }
-} 
